@@ -1,4 +1,5 @@
 package gap_buffer
+
 import "core:unicode/utf8"
 import "core:mem"
 import "core:runtime"

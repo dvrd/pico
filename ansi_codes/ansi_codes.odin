@@ -1,5 +1,6 @@
 package ansi_codes
 import "core:fmt"
+
 //https://en.wikipedia.org/wiki/ANSI_escape_code
 print_ansi_sgr_table :: proc() {
 	for i := 0; i < 11; i += 1 {

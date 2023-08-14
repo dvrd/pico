@@ -4,8 +4,8 @@ import "core:strings"
 import "core:fmt"
 import "core:mem"
 import "core:unicode/utf8"
-import "./ansi_codes"
-import "./gap_buffer"
+import "ansi_codes"
+import "gap_buffer"
 
 STATUS_LINE :: 1
 Terminal :: struct {
@@ -16,6 +16,7 @@ Terminal :: struct {
 	screen_buffer: strings.Builder,
 	status_line:   [dynamic]u8,
 }
+
 make_terminal :: proc(n_bytes: int = 4) -> Terminal {
 	t := Terminal{}
 	t.dims = _get_window_size()
@@ -56,6 +57,7 @@ update_render_cursor :: proc(t: ^Terminal) {
 	}
 	return
 }
+
 move_cursor_by_pages :: proc(t: ^Terminal, n: int) {
 	if len(t.buffer.lines) == 0 {return}
 
@@ -74,6 +76,7 @@ move_cursor_by_pages :: proc(t: ^Terminal, n: int) {
 	col := min(t.render_cursor.y - 1, line_length(&t.buffer, abs_line))
 	t.buffer.cursor = starts_at + col
 }
+
 move_cursor_by_lines :: proc(t: ^Terminal, n: int) {
 	if len(t.buffer.lines) == 0 {return}
 	row := (t.render_cursor.x - 1) + n
@@ -92,6 +95,7 @@ move_cursor_by_lines :: proc(t: ^Terminal, n: int) {
 
 	t.buffer.cursor = starts_at + col
 }
+
 // TODO: maybe move into textbuffer?
 move_cursor_by_runes :: proc(t: ^Terminal, n: int) {
 	buffer := t.buffer.gb.buf
@@ -115,6 +119,7 @@ move_cursor_by_runes :: proc(t: ^Terminal, n: int) {
 clear_status_line :: proc(t: ^Terminal) {
 	mem.set(&t.status_line[0], ' ', len(t.status_line))
 }
+
 write_status_line :: proc(t: ^Terminal) {
 	fmt.bprintf(
 		t.status_line[:],
@@ -127,6 +132,7 @@ write_status_line :: proc(t: ^Terminal) {
 		len(t.buffer.lines),
 	)
 }
+
 get_visible_cursors :: proc(t: ^Terminal) -> (start, end: int) {
 	if len(t.buffer.lines) == 0 {
 		end = length_of(&t.buffer)
@@ -144,6 +150,7 @@ get_visible_cursors :: proc(t: ^Terminal) -> (start, end: int) {
 
 RUNNING := true
 SHOULD_SAVE := false
+
 main :: proc() {
 	args := os.args
 	if len(args) != 2 {
@@ -290,6 +297,7 @@ update :: proc(t: ^Terminal) -> bool {
 			// posix
 			remove_at(&t.buffer, t.buffer.cursor, 1)
 		} else if buf[i] == BKSP {
+			fmt.println("BKSP")
 			// posix
 			remove_at(&t.buffer, t.buffer.cursor, -1)
 		} else {

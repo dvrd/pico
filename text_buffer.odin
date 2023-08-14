@@ -2,7 +2,7 @@ package pico
 import "core:strings"
 import "core:fmt"
 import "core:os"
-import "./gap_buffer"
+import "gap_buffer"
 
 TextBuffer :: struct {
 	using gb: gap_buffer.GapBuffer,

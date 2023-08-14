@@ -1,9 +1,8 @@
 // +build windows
-// +private
 package pico
 import win "core:sys/windows"
 import "core:os"
-import "./ansi_codes"
+import "ansi_codes"
 
 prev_in_mode: win.DWORD
 prev_out_mode: win.DWORD
